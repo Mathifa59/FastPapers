@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --amarillo-fast: #ffc20e;
+  --ambar-profundo: #c98a00;
+  --negro-papel: #0e0e0e;
+  --grafito: #1c1c1c;
+  --blanco-hueso: #f7f5f0;
+  --verde-whatsapp: #25d366;
+}
+
+@layer base {
+  * {
+    @apply border-blanco-hueso/10;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-negro-papel text-blanco-hueso font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display uppercase tracking-tightest;
+  }
+
+  /* Cifras, calibres y medidas siempre en tabular-nums: alinean como ficha técnica */
+  .cifras,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Foco visible obligatorio (WCAG) — nunca lo quitamos, solo lo estilizamos */
+  :focus-visible {
+    outline: 3px solid var(--amarillo-fast);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--amarillo-fast);
+    color: var(--negro-papel);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Oculta la barra de scroll del carrusel sin quitarle la funcionalidad */
+  .sin-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .sin-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Retícula técnica de fondo: grilla sobre negro, líneas amarillas al 6% */
+  .fondo-retícula {
+    background-image: var(--tw-bg-grid, none);
+    background-image: linear-gradient(rgba(255, 194, 14, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 194, 14, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Efecto "plumón resaltador": barrido amarillo detrás del texto, izquierda a derecha */
+  .resaltador {
+    background-image: linear-gradient(var(--amarillo-fast), var(--amarillo-fast));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 2px;
+    transition: background-size 200ms ease-out, color 200ms ease-out;
+  }
+
+  .resaltador:hover,
+  .resaltador:focus-visible,
+  .resaltador.activo {
+    background-size: 100% 2px;
+  }
+
+  .resaltador-bloque {
+    background-image: linear-gradient(var(--amarillo-fast), var(--amarillo-fast));
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 0% 100%;
+    transition: background-size 220ms ease-out;
+  }
+
+  .resaltador-bloque:hover,
+  .resaltador-bloque:focus-visible,
+  .resaltador-bloque.activo {
+    background-size: 100% 100%;
+  }
+
+  .boton-primario {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-amarillo-fast px-6 py-3.5 font-display text-sm uppercase tracking-tightest text-negro-papel transition-colors duration-150 hover:bg-ambar-profundo focus-visible:bg-ambar-profundo;
+  }
+
+  .boton-secundario {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-blanco-hueso/30 bg-transparent px-6 py-3.5 font-display text-sm uppercase tracking-tightest text-blanco-hueso transition-colors duration-150 hover:border-amarillo-fast hover:text-amarillo-fast;
+  }
+
+  .etiqueta-seccion {
+    @apply font-display text-xs uppercase tracking-[0.15em] text-amarillo-fast;
+  }
+
+  /* Trata cualquier foto de stock en duotono negro/amarillo: nunca sale color
+     fuera de la paleta de marca, sin importar la foto de origen. */
+  .duotono {
+    filter: url(#duotono-amarillo);
+  }
+  .duotono-ambar {
+    filter: url(#duotono-ambar);
+  }
+
+  /* "Corte de esquina": traduce el servicio de corte a una forma. Se usa en
+     tarjetas de foto y paneles destacados, con moderación. */
+  .corte-esquina {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+  }
+  .corte-esquina-sm {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+
+  /* Resplandor sutil dentro de la paleta — para CTAs y paneles clave */
+  .resplandor-amarillo {
+    box-shadow: 0 0 0 rgba(255, 194, 14, 0);
+    transition: box-shadow 200ms ease-out;
+  }
+  .resplandor-amarillo:hover,
+  .resplandor-amarillo:focus-visible {
+    box-shadow: 0 0 32px rgba(255, 194, 14, 0.35);
+  }
+}
+
+@layer utilities {
+  @keyframes pulso-resplandor {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.06);
+    }
+  }
+  .animar-pulso {
+    animation: pulso-resplandor 4s ease-in-out infinite;
+  }
+
+  @keyframes barrido-degradado {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+  .degradado-animado {
+    background-size: 200% 100%;
+    animation: barrido-degradado 6s linear infinite;
+  }
+
+  @keyframes aparecer-suave {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .aparecer-suave {
+    animation: aparecer-suave 350ms ease-out;
+  }
+
+  /* Líneas de corte "en movimiento" en el diagrama de servicio de corte */
+  @keyframes avance-corte {
+    to {
+      stroke-dashoffset: -140;
+    }
+  }
+  .linea-corte-animada {
+    stroke-dasharray: 8 6;
+    animation: avance-corte 3s linear infinite;
+  }
+}
