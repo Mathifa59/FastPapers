@@ -37,7 +37,7 @@ export default function PorQueFastpapers() {
               <span className="cifras font-display text-sm text-ambar-profundo transition-transform duration-200 group-hover:scale-110 inline-block">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-3 font-display text-xl uppercase tracking-tightest text-negro-papel">
+              <h3 className="mt-3 font-display text-lg uppercase tracking-tightest text-negro-papel">
                 {bloque.titulo}
               </h3>
               <p className="mt-2 text-negro-papel/70">{bloque.cuerpo}</p>

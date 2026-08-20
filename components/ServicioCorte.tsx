@@ -7,15 +7,11 @@ export default function ServicioCorte() {
     <section id="corte" className="border-b border-blanco-hueso/10 bg-negro-papel py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="corte-esquina resplandor-amarillo grid grid-cols-1 items-center gap-12 border-2 border-amarillo-fast p-6 sm:p-10 lg:grid-cols-2 lg:p-16">
+          <div className="resplandor-amarillo grid grid-cols-1 items-center gap-12 border-2 border-amarillo-fast p-6 sm:p-10 lg:grid-cols-2 lg:p-16">
             <div>
               <span className="etiqueta-seccion">Servicio de corte</span>
-              <h2 className="mt-3 text-display-lg text-blanco-hueso">
-                SE LO ENTREGAMOS
-                <br />
-                CORTADO.
-              </h2>
-              <p className="mt-6 max-w-md text-lg leading-relaxed text-blanco-hueso/80">
+              <h2 className="mt-3 text-display-lg text-blanco-hueso">SE LO ENTREGAMOS CORTADO.</h2>
+              <p className="mt-6 max-w-md text-base leading-relaxed text-blanco-hueso/80 sm:text-lg">
                 Díganos el formato final y nosotros cortamos el pliego. Menos merma, menos tiempo de
                 máquina, menos manipuleo en su taller.
               </p>

@@ -45,7 +45,7 @@ export default function FichaMaterialModal({ material, onCerrar }: FichaMaterial
             <span className="cifras font-display text-xs text-blanco-hueso/40">
               MAT-{String(material.ordenRotacion).padStart(2, "0")}
             </span>
-            <h3 id="ficha-titulo" className="mt-1 font-display text-2xl uppercase tracking-tightest text-amarillo-fast sm:text-3xl">
+            <h3 id="ficha-titulo" className="mt-1 font-display text-xl uppercase tracking-tightest text-amarillo-fast sm:text-2xl">
               {material.nombre}
             </h3>
           </div>

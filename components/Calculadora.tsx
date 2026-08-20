@@ -238,7 +238,7 @@ function ResultadoStat({ etiqueta, valor }: { etiqueta: string; valor: string | 
   return (
     <div className="bg-grafito px-4 py-4">
       <dt className="text-xs uppercase tracking-[0.1em] text-blanco-hueso/50">{etiqueta}</dt>
-      <dd className="cifras mt-1 font-display text-3xl text-amarillo-fast">{valor}</dd>
+      <dd className="cifras mt-1 font-display text-xl text-amarillo-fast sm:text-2xl">{valor}</dd>
     </div>
   );
 }

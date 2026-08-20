@@ -86,7 +86,7 @@ export default function HeroSection() {
         <div key={publico} className="aparecer-suave">
           <h1 className="max-w-4xl text-display-xl text-blanco-hueso">{copy.h1}</h1>
 
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-blanco-hueso/80 sm:text-xl">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-blanco-hueso/80 sm:text-lg">
             {copy.sub}
           </p>
 
@@ -112,17 +112,17 @@ export default function HeroSection() {
           <dl className="mt-16 grid max-w-2xl grid-cols-1 gap-px overflow-hidden border border-blanco-hueso/15 bg-blanco-hueso/15 sm:grid-cols-3">
             <div className="bg-negro-papel px-5 py-4">
               <dt className="text-xs uppercase tracking-[0.15em] text-blanco-hueso/50">Operando</dt>
-              <dd className="cifras mt-1 font-display text-2xl text-amarillo-fast">
+              <dd className="cifras mt-1 font-display text-lg text-amarillo-fast sm:text-xl">
                 {AÑOS_OPERANDO} AÑOS
               </dd>
             </div>
             <div className="bg-negro-papel px-5 py-4">
               <dt className="text-xs uppercase tracking-[0.15em] text-blanco-hueso/50">Tiendas</dt>
-              <dd className="cifras mt-1 font-display text-2xl text-amarillo-fast">LIMA · BREÑA</dd>
+              <dd className="cifras mt-1 font-display text-lg text-amarillo-fast sm:text-xl">LIMA · BREÑA</dd>
             </div>
             <div className="bg-negro-papel px-5 py-4">
               <dt className="text-xs uppercase tracking-[0.15em] text-blanco-hueso/50">Despacho</dt>
-              <dd className="cifras mt-1 font-display text-2xl text-amarillo-fast">TODO EL PERÚ</dd>
+              <dd className="cifras mt-1 font-display text-lg text-amarillo-fast sm:text-xl">TODO EL PERÚ</dd>
             </div>
           </dl>
         </Reveal>

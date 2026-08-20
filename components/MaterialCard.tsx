@@ -30,14 +30,14 @@ export default function MaterialCard({ material, destacado, onAbrir }: MaterialC
         <span className="cifras block font-display text-xs text-blanco-hueso/40">{codigo}</span>
         <h3
           className={`mt-2 font-display uppercase tracking-tightest text-blanco-hueso ${
-            destacado ? "text-2xl sm:text-3xl" : "text-lg sm:text-xl"
+            destacado ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
           }`}
         >
           {material.nombre}
         </h3>
         <p
           className={`mt-2 text-blanco-hueso/70 ${
-            destacado ? "text-sm sm:text-base" : "text-xs sm:text-sm"
+            destacado ? "text-sm" : "text-xs sm:text-sm"
           }`}
         >
           {material.descripcion}

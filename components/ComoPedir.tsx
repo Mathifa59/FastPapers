@@ -33,10 +33,10 @@ export default function ComoPedir() {
           {PASOS.map((paso, i) => (
             <li key={paso.titulo} className="relative border-t-2 border-amarillo-fast pt-6">
               <Reveal retraso={i * 120}>
-                <span className="cifras font-display text-4xl text-amarillo-fast">
+                <span className="cifras font-display text-3xl text-amarillo-fast">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-3 font-display text-lg uppercase tracking-tightest text-blanco-hueso sm:text-xl">
+                <h3 className="mt-3 font-display text-base uppercase tracking-tightest text-blanco-hueso sm:text-lg">
                   {paso.titulo}
                 </h3>
                 <p className="mt-2 text-blanco-hueso/70">{paso.cuerpo}</p>

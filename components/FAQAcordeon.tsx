@@ -59,7 +59,7 @@ function ItemFAQ({
           </span>
           <span
             aria-hidden="true"
-            className={`shrink-0 font-display text-2xl text-amarillo-fast transition-transform duration-200 ${
+            className={`flex h-6 w-6 shrink-0 items-center justify-center font-display text-xl text-amarillo-fast transition-transform duration-200 ${
               abierto ? "rotate-45" : ""
             }`}
           >

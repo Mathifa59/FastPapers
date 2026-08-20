@@ -27,9 +27,9 @@ const config: Config = {
       },
       fontSize: {
         // Escala pensada para cifras/calibres grandes tipo señalética
-        "display-xl": ["clamp(2.75rem, 7vw, 6rem)", { lineHeight: "0.95" }],
-        "display-lg": ["clamp(2.25rem, 5vw, 4rem)", { lineHeight: "0.98" }],
-        "display-md": ["clamp(1.75rem, 3.5vw, 2.75rem)", { lineHeight: "1.02" }],
+        "display-xl": ["clamp(2.25rem, 5.5vw, 4.75rem)", { lineHeight: "1.02" }],
+        "display-lg": ["clamp(1.875rem, 4vw, 3.25rem)", { lineHeight: "1.05" }],
+        "display-md": ["clamp(1.5rem, 3vw, 2.25rem)", { lineHeight: "1.08" }],
       },
       backgroundImage: {
         "grid-tecnica":

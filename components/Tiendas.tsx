@@ -29,7 +29,7 @@ export default function Tiendas() {
               </div>
 
               <div className="p-6 sm:p-8">
-                <h3 className="font-display text-2xl uppercase tracking-tightest text-amarillo-fast">
+                <h3 className="font-display text-xl uppercase tracking-tightest text-amarillo-fast">
                   {tienda.nombre}
                 </h3>
                 <dl className="mt-4 space-y-3 text-sm">

@@ -10,8 +10,11 @@ import { GALERIA_INDUSTRIAL } from "@/content/galeria";
  * prefers-reduced-motion, flechas y puntos accesibles por teclado.
  */
 export default function GaleriaIndustrial() {
+  const seccionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const pausadoRef = useRef(false);
+  const primerRenderRef = useRef(true);
+  const reactivarSnapRef = useRef<number | undefined>(undefined);
   const total = GALERIA_INDUSTRIAL.length;
   const [indiceActivo, setIndiceActivo] = useState(0);
 
@@ -19,12 +22,26 @@ export default function GaleriaIndustrial() {
     const track = trackRef.current;
     const slide = track?.children[i] as HTMLElement | undefined;
     if (track && slide) {
-      // getBoundingClientRect en vez de offsetLeft: offsetLeft se mide contra
-      // el offsetParent, que no necesariamente es el contenedor de scroll.
+      // Centramos el slide (no lo alineamos por el borde izquierdo): el CSS
+      // usa snap-center y la detección de "activo" de más abajo también mide
+      // contra el centro. Si esto no coincide, ambas lógicas compiten entre
+      // sí y el carrusel salta de forma errática en vez de asentarse.
       const trackRect = track.getBoundingClientRect();
       const slideRect = slide.getBoundingClientRect();
-      const destino = track.scrollLeft + (slideRect.left - trackRect.left);
+      const centroSlide = slideRect.left - trackRect.left + slideRect.width / 2;
+      const destino = track.scrollLeft + centroSlide - track.clientWidth / 2;
+
+      // scroll-snap-type:mandatory + scrollTo programático: en varios motores
+      // el navegador "rechaza" el scroll que no viene de un gesto real y lo
+      // revierte de inmediato al punto de snap actual (el carrusel quedaba
+      // congelado tras el primer slide). Lo evitamos apagando el snap justo
+      // durante el scroll animado y lo reactivamos al terminar.
+      track.style.scrollSnapType = "none";
       track.scrollTo({ left: destino, behavior: "smooth" });
+      window.clearTimeout(reactivarSnapRef.current);
+      reactivarSnapRef.current = window.setTimeout(() => {
+        track.style.scrollSnapType = "";
+      }, 500);
     }
   }, []);
 
@@ -32,23 +49,34 @@ export default function GaleriaIndustrial() {
   const anterior = useCallback(() => setIndiceActivo((i) => (i - 1 + total) % total), [total]);
 
   useEffect(() => {
+    // En el montaje inicial el slide 0 ya está en su lugar: no hace falta
+    // animar un scroll hacia donde ya estamos.
+    if (primerRenderRef.current) {
+      primerRenderRef.current = false;
+      return;
+    }
     irASlide(indiceActivo);
   }, [indiceActivo, irASlide]);
 
-  // Autoplay — se detiene con prefers-reduced-motion y al interactuar
+  useEffect(() => {
+    return () => window.clearTimeout(reactivarSnapRef.current);
+  }, []);
+
+  // Autoplay — se pausa con hover/foco/touch en toda la sección (no solo la
+  // pista) y se detiene por completo si el usuario prefiere menos movimiento.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const track = trackRef.current;
+    const seccion = seccionRef.current;
     const marcarPausado = () => (pausadoRef.current = true);
     const marcarActivo = () => (pausadoRef.current = false);
 
-    track?.addEventListener("pointerenter", marcarPausado);
-    track?.addEventListener("pointerleave", marcarActivo);
-    track?.addEventListener("touchstart", marcarPausado, { passive: true });
-    track?.addEventListener("focusin", marcarPausado);
-    track?.addEventListener("focusout", marcarActivo);
+    seccion?.addEventListener("pointerenter", marcarPausado);
+    seccion?.addEventListener("pointerleave", marcarActivo);
+    seccion?.addEventListener("touchstart", marcarPausado, { passive: true });
+    seccion?.addEventListener("focusin", marcarPausado);
+    seccion?.addEventListener("focusout", marcarActivo);
 
     const id = window.setInterval(() => {
       if (!pausadoRef.current) siguiente();
@@ -56,22 +84,27 @@ export default function GaleriaIndustrial() {
 
     return () => {
       window.clearInterval(id);
-      track?.removeEventListener("pointerenter", marcarPausado);
-      track?.removeEventListener("pointerleave", marcarActivo);
-      track?.removeEventListener("touchstart", marcarPausado);
-      track?.removeEventListener("focusin", marcarPausado);
-      track?.removeEventListener("focusout", marcarActivo);
+      seccion?.removeEventListener("pointerenter", marcarPausado);
+      seccion?.removeEventListener("pointerleave", marcarActivo);
+      seccion?.removeEventListener("touchstart", marcarPausado);
+      seccion?.removeEventListener("focusin", marcarPausado);
+      seccion?.removeEventListener("focusout", marcarActivo);
     };
   }, [siguiente]);
 
-  // Mantiene el punto activo sincronizado si el usuario arrastra el carrusel a mano
+  // Sincroniza el punto activo con la posición real del scroll — pero solo
+  // cuando el scroll ya se asentó (debounce), nunca en cada frame. Reaccionar
+  // a cada frame de una animación programática es lo que causaba el ciclo:
+  // scroll → recalcula índice a mitad de camino → reprograma el scroll →
+  // vuelve a scrollear → nuevo evento de scroll... y el carrusel no se
+  // asentaba nunca.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    let raf = 0;
+    let idQuieto: number | undefined;
     const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
+      window.clearTimeout(idQuieto);
+      idQuieto = window.setTimeout(() => {
         const trackRect = track.getBoundingClientRect();
         const centro = trackRect.left + trackRect.width / 2;
         const hijos = Array.from(track.children) as HTMLElement[];
@@ -87,17 +120,21 @@ export default function GaleriaIndustrial() {
           }
         });
         setIndiceActivo(masCercano);
-      });
+      }, 120);
     };
     track.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       track.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
+      window.clearTimeout(idQuieto);
     };
   }, []);
 
   return (
-    <section aria-label="Galería del sector gráfico" className="relative overflow-hidden border-b border-blanco-hueso/10 bg-negro-papel py-16 sm:py-20">
+    <section
+      ref={seccionRef}
+      aria-label="Galería del sector gráfico"
+      className="relative overflow-hidden border-b border-blanco-hueso/10 bg-negro-papel py-16 sm:py-20"
+    >
       <div className="mx-auto mb-8 flex max-w-7xl items-end justify-between px-4 sm:px-6 lg:px-8">
         <div>
           <span className="etiqueta-seccion">El rubro, de cerca</span>
@@ -130,7 +167,7 @@ export default function GaleriaIndustrial() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-negro-papel via-negro-papel/10 to-transparent" />
             <figcaption className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-              <span className="font-display text-lg uppercase tracking-tightest text-amarillo-fast sm:text-2xl">
+              <span className="font-display text-base uppercase tracking-tightest text-amarillo-fast sm:text-xl">
                 {item.leyenda}
               </span>
             </figcaption>
